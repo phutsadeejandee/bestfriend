@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MydayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/advice', function () {
+    return view('advice');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/myday', [MydayController::class, 'index'])->name('myday');
+    Route::get('/myday/create', [MydayController::class, 'create'])->name('myday.create');
+});
+
+require __DIR__.'/auth.php';
