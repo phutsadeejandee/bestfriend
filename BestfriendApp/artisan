@@ -3,6 +3,11 @@
 
 define('LARAVEL_START', microtime(true));
 
+
+set_include_path('C:\xampp\php\PEAR');
+set_include_path(get_include_path() . PATH_SEPARATOR . 'C:\xampp\php\PEAR');
+set_include_path('C:\xampp\php\PEAR' . PATH_SEPARATOR . 'C:\xampp\php\PEAR');
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -18,6 +23,8 @@ define('LARAVEL_START', microtime(true));
 require __DIR__.'/vendor/autoload.php';
 
 $app = require_once __DIR__.'/bootstrap/app.php';
+
+echo get_include_path();
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +43,7 @@ $status = $kernel->handle(
     $input = new Symfony\Component\Console\Input\ArgvInput,
     new Symfony\Component\Console\Output\ConsoleOutput
 );
+
 
 /*
 |--------------------------------------------------------------------------

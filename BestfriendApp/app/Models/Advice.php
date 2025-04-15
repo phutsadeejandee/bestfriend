@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Myday extends Model
+class Advice extends Model
 {
     use HasFactory;
 
@@ -13,6 +13,5 @@ class Myday extends Model
         'user_id',
         'title',
         'detail',
-        'img'
     ];
 }

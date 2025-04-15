@@ -1,21 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Advice;
 use App\Models\Myday;
+use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
-class MydayController extends Controller
+class AdviceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($userId)
+    public function index()
     {
         $userId = Auth::id(); // ดึง user_id ของผู้ใช้ที่ login อยู่
-        $mydays = Myday::where('user_id', $userId)->get();
-        return view('myday.index', compact('mydays'));
+        $advices = Advice::where('user_id', $userId)->get();
+        return view('advice.advice', compact('advices'));
     }
 
     /**
@@ -23,7 +25,7 @@ class MydayController extends Controller
      */
     public function create()
     {
-        return view('myday.index', compact('title'));
+        return view('advice.advice', compact('title'));
     }
 
     /**
@@ -37,41 +39,46 @@ class MydayController extends Controller
         ]);
     
         // สร้างข้อมูลใหม่
-        Myday::create([
+        Advice::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'detail' => $request->detail,
         ]);
     
-        session()->flash('success', 'เพิ่ม Myday สำเร็จ!');
-        return redirect()->route('myday', ['userId' => Auth::id()]);
+        session()->flash('success', 'เพิ่ม คำแนะนำ สำเร็จ!');
+        return redirect()->route('advice', ['userId' => Auth::id()]);
     }
+
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-        $myday = Myday::findOrFail($id);
-        return view('myday.show', compact('myday'));
+        $advice = Advice::findOrFail($id);
+        return view('advice.show', compact('advice'));
     }
 
-    public function view()
+    public function Welcomeshow($id)
+{
+    $advice = Advice::findOrFail($id);
+    return view('welcome', compact('advice'));
+}
+
+    public function showAllData()
     {
-        $mydays = Myday::where('user_id', Auth::id())->get();
-        return view('dashboard', compact('mydays'));
+        $advices = Advice::paginate(5);
+        $mydays = Myday::paginate(5);
+        $tests = Test::paginate(5);
+        return view('dashboard', compact('advices','mydays','tests'));
     }
-
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
         $title = "Update Myday";
-        $edit = Myday::findOrFail($id);
-        return view('myday.edit', compact('edit', 'title'));
-
-        
+        $edit = Advice::findOrFail($id);
+        return view('advice.edit', compact('edit', 'title'));
     }
 
     /**
@@ -86,13 +93,13 @@ class MydayController extends Controller
             ]
         );
         $userId = Auth::id();
-        $update = Myday::findOrFail($id);
+        $update = Advice::findOrFail($id);
         $update->title = $request->input('title');
         $update->detail = $request->input('detail');
  
         $result = $update->save();
-        Session::flash('success', 'Myday updated successfully');
-        return redirect()->route('myday', ['userId' => $userId]);
+        Session::flash('success', 'advice updated successfully');
+        return redirect()->route('advice', ['userId' => $userId]);
     }
 
     /**
@@ -100,16 +107,15 @@ class MydayController extends Controller
      */
     public function destroy(Request $request,string $id)
     {
-        $myday = Myday::findOrFail($id);
+        $advice = Advice::findOrFail($id);
 
-        if ($myday->user_id != Auth::id()) {
+        if ($advice->user_id != Auth::id()) {
             abort(403); // ไม่อนุญาต
         }
         
-        $userId = $myday->user_id; // เก็บ user_id ก่อนลบ
-        $myday->delete();
+        $userId = $advice->user_id; // เก็บ user_id ก่อนลบ
+        $advice->delete();
   
-        return redirect()->route('myday', ['userId' => $userId]);
+        return redirect()->route('advice', ['userId' => $userId]);
     }
 }
-

@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Myday extends Model
+class Test extends Model
 {
     use HasFactory;
 
     protected $fillable  = [
         'user_id',
-        'title',
-        'detail',
-        'img'
+        'personality_type',
     ];
 }

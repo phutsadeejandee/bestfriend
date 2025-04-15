@@ -1,15 +1,16 @@
 <x-app-layout>
 
     <br>
-  <center><h1 class="display-5 fw-bold lh-1 mb-3" style="color: #ff66c4;">บันทึกของฉัน</h1></center>
+  <center><h1 class="display-5 fw-bold lh-1 mb-3" style="color: #ff66c4;">ขอคำแนะนำ</h1></center>
   <br>
-    <div class="container">
-        <!-- แบบฟอร์ม -->
+  <div class="container">
         <div class="row align-items-md-stretch">
+            
+        <!-- แบบฟอร์ม -->
 
             <div class="col-md-6">
-                <form action="{{ route('upload') }}" method="POST" enctype="multipart/form-data">
-                    @csrf  <!-- ป้องกัน CSRF Attack -->
+                <form action="{{ route('advice.upload') }}" method="POST" enctype="multipart/form-data">
+                @csrf  <!-- ป้องกัน CSRF Attack -->
                     
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-default">คนเขียน</span>
@@ -33,24 +34,17 @@
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-warning btn-sm">บันทึกตรงนี้</button>
                     <button onclick="history.back()" class="btn btn-danger btn-sm">ย้อนกลับ</button>
+
                 </form>
             </div>
 
-         
-        
-    
-  <br>
-
-  <!-- <div class="pt-3 mt-4 text-muted border-top"></div> -->
-
-  <!-- แสดง -->
-   
+        <!-- แสดง -->
             <div class="col-md-6">
                 <table class="table text-center">
                     <thead class="table">
                         <tr class="table-warning">
                             <th>#</th>
-                            <th>เรื่องอะไร</th>
+                            <th>คำถาม</th>
                             <th>วันที่เขียน</th>
                             <th>แก้ไขล่าสุด</th>
                             <th>ดู</th>
@@ -59,27 +53,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($mydays as $index => $myday)
+                        @forelse($advices as $index => $advice)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $myday->title }}</td>
-                                <td>{{ $myday->created_at->format('d/m/Y') }}</td>
-                                <td>{{ $myday->updated_at->format('d/m/Y') }}</td>
+                                <td>{{ $advice->title }}</td>
+                                <td>{{ $advice->created_at->format('d/m/Y') }}</td>
+                                <td>{{ $advice->updated_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ route('myday.show', $myday->id) }}" class="btn btn-success btn-sm" style="color: white;">เรียกดู</a>
+                                    <a href="{{ route('advice.show', $advice->id) }}" class="btn btn-success btn-sm" style="color: white;">เรียกดู</a>
                                 </td>
                                 <td>
-                                    <a href="{{ route('myday.edit', ['id' => $myday->id]) }}" class="btn btn-warning btn-sm" style="color: white;">แก้ไข</a>
+                                    <a href="{{ route('advice.edit', ['id' => $advice->id]) }}" class="btn btn-warning btn-sm" style="color: white;">แก้ไข</a>
                                 </td>
                                 <td>
                                     <!-- ปุ่ม Delete -->
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $myday->id }})">ลบออก</button>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $advice->id }})">ลบออก</button>
 
                                     <!-- ฟอร์มลบซ่อนไว้ -->
-                                    <form id="delete-form-{{ $myday->id }}" action="{{ route('myday.destroy', $myday->id) }}" method="POST" style="display: none;">
+                                    <form id="delete-form-{{ $advice->id }}" action="{{ route('advice.destroy', $advice->id) }}" method="POST" style="display: none;">
                                         @csrf
                                         @method('DELETE')
                                     </form>
+
                                 </td>
                             </tr>
                         @empty
@@ -87,34 +82,17 @@
                                 <td colspan="7">No Mydays Found</td>
                             </tr>
                         @endforelse
+                        
                     </tbody>
                 </table>
             </div>
-            <!-- จบ แสดง -->
         </div>
-    </div>
-    <br>
-    
-    <style>
-        .avatar-upload {
-        position: relative;
-        max-width: 205px;
-        }
-        .showImg {
-            width: 51%;
-            height: 54%;
-            margin: auto;
-        }
-        .showImg>div {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-    </style>
-    <script>
+        
+        
+  </div>
+  <br>
+
+  <script>
         function confirmDelete(id) {
             Swal.fire({
                 title: 'คุณแน่ใจหรือไม่?',
@@ -133,5 +111,5 @@
         }
     </script>
 
-    <div class="pt-3 mt-4 text-muted border-top"></div>
+  <div class="pt-3 mt-4 text-muted border-top"></div>
 </x-app-layout>
